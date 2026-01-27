@@ -1,0 +1,25 @@
+{
+  "name": "first-api-graphql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "tsx watch src/server.ts",
+    "simple": "tsx watch src/simple-server.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.2.0",
+    "apollo-server": "^3.13.0",
+    "dotenv": "^17.2.3",
+    "graphql": "^16.12.0",
+    "graphql-scalars": "^1.25.0",
+    "mysql2": "^3.16.2",
+    "reflect-metadata": "^0.2.2",
+    "type-graphql": "^2.0.0-rc.2"
+  }
+}
