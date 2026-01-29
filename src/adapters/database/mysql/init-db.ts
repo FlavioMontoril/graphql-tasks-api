@@ -15,7 +15,16 @@ export async function initDatabase() {
       updated_at DATETIME NOT NULL,
       archived BOOLEAN DEFAULT FALSE
     );
-  `);
+    `);
+
+  await mysqlClient.execute(`
+      ALTER TABLE tasks
+      MODIFY updated_at DATETIME,
+      MODIFY code VARCHAR(10),
+      MODIFY summary VARCHAR(30),
+      MODIFY reporter VARCHAR(50),
+      MODIFY assignee VARCHAR(50);
+      `)
 
   console.log("✅ Database and table 'tasks' initialized");
 }

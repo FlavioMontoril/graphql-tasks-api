@@ -30,10 +30,9 @@ export class MySQLTaskRepository implements TaskRepository {
     const offset = (page - 1) * perPage;
 
     const [rows]: any = await mysqlClient.execute(
-      `SELECT * FROM tasks ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+      `SELECT * FROM tasks ORDER BY created_at DESC LIMIT ${perPage} OFFSET ${offset}`,
       [perPage, offset]
     );
-
     return rows.map((row: any) =>
       Task.build({
         id: row.id,

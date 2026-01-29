@@ -17,7 +17,7 @@ export interface TaskProps {
   assignee?: string | null;
   status?: TaskStatus;
   createdAt?: Date;
-  updatedAt?: Date;
+  updatedAt?: Date | null;
   archived?: boolean;
 }
 
@@ -25,7 +25,7 @@ export class Task {
   private props: TaskProps;
 
   private constructor(props: TaskProps) {
-    this.props = props;
+    this.props = {...props};
   }
 
   public static build(props: TaskProps) {
@@ -33,7 +33,7 @@ export class Task {
       ...props,
       id: props.id || uuidv4(),
       createdAt: props.createdAt ?? new Date(),
-      updatedAt: props.updatedAt ?? new Date(),
+      updatedAt: props.updatedAt ?? null,
       archived: props.archived ?? false,
       status: props.status ?? TaskStatus.OPEN,
     });
