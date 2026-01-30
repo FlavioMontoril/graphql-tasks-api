@@ -15,7 +15,7 @@ async function startServer() {
 
     await mysqlClient.getConnection();
 
-    console.log("✅ MySQL conectado com sucesso");
+    console.log("[MySQL] conectado com sucesso");
 
     const server = new ApolloServer({schema});
 
@@ -23,9 +23,9 @@ async function startServer() {
       listen: { port: Number(process.env.PORT)  },
     });
 
-    console.log(`🚀 GraphQL Server running at ${url}`);
+    console.log(`[GraphQL] Server running at ${url}`);
   } catch (err) {
-    console.error("❌ Erro ao iniciar o servidor:", err);
+    console.error("[Erro] ao iniciar o servidor:", err);
     process.exit(1);
   }
 }

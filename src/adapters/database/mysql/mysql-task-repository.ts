@@ -1,16 +1,12 @@
 import { Task, TaskStatus } from "../../../core/entity/task-entity";
 import { Pagination, TaskRepository } from "../../../core/repository/task-repository";
 import { mysqlClient } from "../../../infra/database/mysql";
+import { taskQueries } from "../../../sql/task-queries";
 
 
 export class MySQLTaskRepository implements TaskRepository {
   async create(task: Task): Promise<void> {
-    const sql = `
-      INSERT INTO tasks 
-      (id, code, summary, description, reporter, assignee, status, created_at, updated_at, archived)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    await mysqlClient.execute(sql, [
+    await mysqlClient.execute(taskQueries.CREATE, [
       task.getId(),
       task.getCode(),
       task.getSummary(),
@@ -25,14 +21,11 @@ export class MySQLTaskRepository implements TaskRepository {
   }
 
   async findAll(pagination?: Pagination): Promise<Task[]> {
-    const page = pagination?.page ?? 1;
-    const perPage = pagination?.perPage ?? 5;
-    const offset = (page - 1) * perPage;
+    const page = Number(pagination?.page ?? 1);
+    const perPage = Number(pagination?.perPage ?? 5);
+    const offset = Math.max((page - 1) * perPage, 0);
 
-    const [rows]: any = await mysqlClient.execute(
-      `SELECT * FROM tasks ORDER BY created_at DESC LIMIT ${perPage} OFFSET ${offset}`,
-      [perPage, offset]
-    );
+    const [rows]: any = await mysqlClient.query(taskQueries.FIND_ALL, [offset, perPage]);
     return rows.map((row: any) =>
       Task.build({
         id: row.id,
@@ -50,7 +43,7 @@ export class MySQLTaskRepository implements TaskRepository {
   }
 
   async findById(id: string): Promise<Task | null> {
-    const [rows]: any = await mysqlClient.execute(`SELECT * FROM tasks WHERE id = ?`, [id]);
+    const [rows]: any = await mysqlClient.execute(taskQueries.FIND_BY_ID, [id]);
     if (rows.length === 0) return null;
     const row = rows[0];
     return Task.build({
@@ -68,7 +61,7 @@ export class MySQLTaskRepository implements TaskRepository {
   }
 
   async findByCode(code: string): Promise<Task | null> {
-    const [rows]: any = await mysqlClient.execute(`SELECT * FROM tasks WHERE code = ? LIMIT 1`, [code]);
+    const [rows]: any = await mysqlClient.execute(taskQueries.FIND_BY_CODE, [code]);
     if (rows.length === 0) return null;
     const row = rows[0];
     return Task.build({
@@ -86,8 +79,7 @@ export class MySQLTaskRepository implements TaskRepository {
   }
 
   async save(task: Task): Promise<void> {
-    await mysqlClient.execute(
-      `UPDATE tasks SET summary=?, description=?, reporter=?, assignee=?, status=?, updated_at=?, archived=? WHERE id=?`,
+    await mysqlClient.execute(taskQueries.UPDATE,
       [
         task.getSummary(),
         task.getDescription(),
@@ -102,11 +94,11 @@ export class MySQLTaskRepository implements TaskRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await mysqlClient.execute(`DELETE FROM tasks WHERE id=?`, [id]);
+    await mysqlClient.execute(taskQueries.DELETE, [id]);
   }
 
   async count(): Promise<number> {
-    const [rows]: any = await mysqlClient.execute(`SELECT COUNT(*) as total FROM tasks`);
+    const [rows]: any = await mysqlClient.execute(taskQueries.COUNT);
     return rows[0].total;
   }
 }
