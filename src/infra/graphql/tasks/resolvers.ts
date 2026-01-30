@@ -17,7 +17,7 @@ interface CreateTaskInput {
 
 export const tasksResolvers = {
   Query: {
-    tasks: async (_: any, args: { page?: number; perPage?: number }) => {
+    tasks: async (_: unknown, args: { page?: number; perPage?: number }) => {
       const useCase = FindAllTasksFactory.build();
       const result = await useCase.execute({
         page: args.page,
@@ -30,7 +30,7 @@ export const tasksResolvers = {
       };
     },
 
-    taskById: async (_: any, args: { id: string }) => {
+    taskById: async (_: unknown, args: { id: string }) => {
       const useCase = FindByIdTaskFactory.build();
       const task = await useCase.execute(args.id)
 
@@ -49,7 +49,7 @@ export const tasksResolvers = {
   },
 
   Mutation: {
-    createTask: async (_: any, args: { input: CreateTaskInput }) => {
+    createTask: async (_: unknown, args: { input: CreateTaskInput }) => {
       const useCase = CreateTaskFactory.build();
       const task = await useCase.execute(args.input);
       return TaskMapper.toGraphQL(task)

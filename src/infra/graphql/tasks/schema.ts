@@ -1,6 +1,4 @@
-import { gql } from "graphql-tag";
-
-export const tasksTypeDefs = gql`
+export const tasksTypeDefs = `
   enum TaskStatus {
     OPEN
     IN_PROGRESS
@@ -18,7 +16,7 @@ export const tasksTypeDefs = gql`
     status: TaskStatus
     createdAt: String!
     updatedAt: String
-    archived: Boolean
+    archived: Boolean!
   }
 
   input CreateTaskInput {
