@@ -1,10 +1,5 @@
-// src/core/repository/task-repository.ts
 import { Task } from "../entity/task-entity";
-
-export interface Pagination {
-  page?: number;
-  perPage?: number;
-}
+import { Pagination } from "../types/task-types";
 
 export interface TaskRepository {
   create(task: Task): Promise<void>;

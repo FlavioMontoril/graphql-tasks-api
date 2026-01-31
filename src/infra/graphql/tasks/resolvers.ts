@@ -1,20 +1,13 @@
-import { TaskStatus } from "../../../core/entity/task-entity";
-import { FindByCodeTaskFactory } from "../../../core/factory/find-by-code-task-factory";
 import { CountTaskFactory } from "../../../core/factory/task-factory/count-task-factory";
 import { CreateTaskFactory } from "../../../core/factory/task-factory/create-task-factory";
 import { FindAllTasksFactory } from "../../../core/factory/task-factory/find-all-tasks-factory";
+import { FindByCodeTaskFactory } from "../../../core/factory/task-factory/find-by-code-task-factory";
 import { FindByIdTaskFactory } from "../../../core/factory/task-factory/find-by-id-task-factory";
+import { ToggleTaskArchiveFactory } from "../../../core/factory/task-factory/toggle-task-arquive-factory";
+import { UpdateTaskFactory } from "../../../core/factory/task-factory/update-task-factory";
+import { CreateTaskInput, UpdateTaskInput } from "../../../core/types/task-types";
 import { TaskMapper } from "../mappers/task-mapper";
 
-
-interface CreateTaskInput {
-  code: string,
-  summary: string,
-  description: string,
-  reporter: string,
-  assignee?: string,
-  status?: TaskStatus
-}
 
 export const tasksResolvers = {
   Query: {
@@ -62,5 +55,17 @@ export const tasksResolvers = {
       const task = await useCase.execute(args.input);
       return TaskMapper.toGraphQL(task)
     },
+
+    updateTask: async (_: unknown, args: { input: UpdateTaskInput, taskId: string }) => {
+      const useCase = UpdateTaskFactory.build();
+      const updatedTask = await useCase.execute(args.input, args.taskId)
+      return TaskMapper.toGraphQL(updatedTask);
+    },
+
+    toggleTaskArchive: async (_: unknown, { taskId }: any) => {
+      const useCase = ToggleTaskArchiveFactory.build();
+      const archived = await useCase.execute(taskId)
+      return TaskMapper.toGraphQL(archived)
+    }
   },
 };

@@ -1,5 +1,6 @@
 import { Task } from "../../entity/task-entity";
-import { Pagination, TaskRepository } from "../../repository/task-repository";
+import { TaskRepository } from "../../repository/task-repository";
+import { Pagination } from "../../types/task-types";
 
 
 export class FindAllTasksUseCase {

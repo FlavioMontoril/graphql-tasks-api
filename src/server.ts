@@ -1,10 +1,8 @@
 import dotenv from "dotenv";
-import {schema} from "./infra/graphql/schema"
 dotenv.config();
-
+import {schema} from "./infra/graphql/schema"
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-
 import { mysqlClient } from "./infra/database/mysql.js";
 import { initDatabase } from "./adapters/database/mysql/init-db.js";
 
@@ -24,8 +22,9 @@ async function startServer() {
     });
 
     console.log(`[GraphQL] Server running at ${url}`);
-  } catch (err) {
-    console.error("[Erro] ao iniciar o servidor:", err);
+  } catch (error) {
+    console.error("[Erro] ao iniciar o servidor:", error);
+    await mysqlClient.end();
     process.exit(1);
   }
 }
