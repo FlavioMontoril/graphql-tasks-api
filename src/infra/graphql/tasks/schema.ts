@@ -28,6 +28,14 @@ export const tasksTypeDefs = `
     status: TaskStatus
   }
 
+  input UpdateTaskInput {
+    summary: String
+    description: String
+    reporter: String
+    assignee: String
+    status: TaskStatus
+  }
+
   type TasksPage {
   tasks: [Task!]!
   total: Int!
@@ -42,5 +50,7 @@ export const tasksTypeDefs = `
 
   type Mutation {
     createTask(input: CreateTaskInput!):Task!
+    updateTask(input: UpdateTaskInput!, taskId: String!):Task!
+    toggleTaskArchive(taskId: ID!): Task!
   }
 `;

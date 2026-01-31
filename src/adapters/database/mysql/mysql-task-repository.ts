@@ -1,5 +1,6 @@
-import { Task, TaskStatus } from "../../../core/entity/task-entity";
-import { Pagination, TaskRepository } from "../../../core/repository/task-repository";
+import { Task } from "../../../core/entity/task-entity";
+import { TaskRepository } from "../../../core/repository/task-repository";
+import { Pagination, TaskStatus } from "../../../core/types/task-types";
 import { mysqlClient } from "../../../infra/database/mysql";
 import { taskQueries } from "../../../sql/task-queries";
 

@@ -1,57 +1,59 @@
-// src/core/entity/task-entity.ts
-import { v4 as uuidv4 } from "uuid";
-
-export enum TaskStatus {
-  OPEN = "OPEN",
-  IN_PROGRESS = "IN_PROGRESS",
-  DONE = "DONE",
-  ARCHIVED = "ARCHIVED",
-}
-
-export interface TaskProps {
-  id?: string;
-  code: string;
-  summary: string;
-  description: string;
-  reporter: string;
-  assignee?: string | null;
-  status?: TaskStatus;
-  createdAt?: Date;
-  updatedAt?: Date | null;
-  archived?: boolean;
-}
+import { TaskProps, TaskStatus } from "../types/task-types";
+import { randomUUID } from "crypto";
 
 export class Task {
-  private props: TaskProps;
+  private readonly id: string;
+  private readonly code: string;
+  private summary: string;
+  private description: string;
+  private reporter: string;
+  private assignee: string | null;
+  private status: TaskStatus;
+  private readonly createdAt?: Date;
+  private updatedAt: Date | null;
+  private archived: boolean;
 
-  private constructor(props: TaskProps) {
-    this.props = {...props};
+  private constructor(data: TaskProps) {
+    this.id = data.id ?? randomUUID();
+    this.code = data.code;
+    this.summary = data.summary;
+    this.description = data.description;
+    this.reporter = data.reporter;
+    this.assignee = data.assignee ?? null;
+    this.status = data.status ?? TaskStatus.OPEN;
+    this.createdAt = data.createdAt ?? new Date();
+    this.updatedAt = data.updatedAt ?? null;
+    this.archived = data.archived ?? false;
   }
 
-  public static build(props: TaskProps) {
-    return new Task({
-      ...props,
-      id: props.id || uuidv4(),
-      createdAt: props.createdAt ?? new Date(),
-      updatedAt: props.updatedAt ?? null,
-      archived: props.archived ?? false,
-      status: props.status ?? TaskStatus.OPEN,
-    });
+  public static build(data: TaskProps) {
+    return new Task(data);
   }
 
-  public getId() { return this.props.id; }
-  public getCode() { return this.props.code; }
-  public getSummary() { return this.props.summary; }
-  public getDescription() { return this.props.description; }
-  public getReporter() { return this.props.reporter; }
-  public getAssignee() { return this.props.assignee; }
-  public getStatus() { return this.props.status; }
-  public getCreatedAt() { return this.props.createdAt; }
-  public getUpdatedAt() { return this.props.updatedAt; }
-  public getArchived() { return this.props.archived; }
-
-  public setArchived(value: boolean) { this.props.archived = value; }
-  public update(props: Partial<TaskProps>) {
-    this.props = { ...this.props, ...props, updatedAt: new Date() };
+  public toggleArchived() {
+    this.archived = !this.archived;
+    this.updatedAt = new Date();
   }
+
+  public touchUpdated() {
+    this.updatedAt = new Date();
+  }
+
+  public getId() { return this.id; }
+  public getCode() { return this.code; }
+  public getSummary() { return this.summary; }
+  public getDescription() { return this.description; }
+  public getReporter() { return this.reporter; }
+  public getAssignee() { return this.assignee; }
+  public getStatus() { return this.status; }
+  public getCreatedAt() { return this.createdAt; }
+  public getUpdatedAt() { return this.updatedAt; }
+  public getArchived() { return this.archived; }
+
+  public setSummary(summary: string) { this.summary = summary; }
+  public setDescription(description: string) { this.description = description; }
+  public setReporter(reporter: string) { this.reporter = reporter; }
+  public setAssignee(assignee: string | null | undefined) { this.assignee = assignee ?? null; }
+  public setStatus(status: TaskStatus | null) { this.status = status ?? this.status; }
+
 }
