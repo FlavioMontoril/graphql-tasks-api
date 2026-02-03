@@ -6,7 +6,7 @@ import { FindByIdTaskFactory } from "../../../core/factory/task-factory/find-by-
 import { ToggleTaskArchiveFactory } from "../../../core/factory/task-factory/toggle-task-arquive-factory";
 import { UpdateTaskFactory } from "../../../core/factory/task-factory/update-task-factory";
 import { CreateTaskInput, UpdateTaskInput } from "../../../core/types/task-types";
-import { TaskMapper } from "../mappers/task-mapper";
+import { TaskMapper } from "./task-mapper";
 
 
 export const tasksResolvers = {
